@@ -18,7 +18,7 @@ XL_font = pygame.font.Font('freesansbold.ttf', 64)
 
 
 # Game Loop
-def Game(Background_Path, Target_Path, Crosshair_path, curtain_path):
+def Game(Background_Path, Target_Path, Crosshair_path, curtain_path, num_bullets):
     # Timer
     current_time = 0
     static_time = 0
@@ -27,6 +27,10 @@ def Game(Background_Path, Target_Path, Crosshair_path, curtain_path):
     font = pygame.font.Font('freesansbold.ttf', 50)
     Score = 0
     Bonus = 1
+    Bullets = int(num_bullets+2)
+    Bullet_x =1050
+    Bullet_y = 150
+    BulletImg = pygame.image.load('PNG/HUD/icon_bullet_gold_long.png')
 
     screen = pygame.display.set_mode((screen_width, screen_height))
     background = pygame.image.load(Background_Path)
@@ -40,7 +44,7 @@ def Game(Background_Path, Target_Path, Crosshair_path, curtain_path):
             self.rect = self.image.get_rect()
             self.gunshot = pygame.mixer.Sound('PNG/HUD/Gunshot.mp3')
 
-        def shoot(self, Score, Bonus):
+        def shoot(self, Score, Bonus, Bullets):
             self.gunshot.play()
             create_new = False
             if pygame.sprite.spritecollide(crosshair, target_group, True):
@@ -55,7 +59,8 @@ def Game(Background_Path, Target_Path, Crosshair_path, curtain_path):
             else:
                 Score += -1 * Bonus
                 Bonus = 1
-            return [Score, Bonus]
+                Bullets += - 1
+            return [Score, Bonus, Bullets]
 
         def update(self):
             self.rect.center = pygame.mouse.get_pos()
@@ -87,7 +92,7 @@ def Game(Background_Path, Target_Path, Crosshair_path, curtain_path):
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                Score, Bonus = crosshair.shoot(Score, Bonus)
+                Score, Bonus, Bullets = crosshair.shoot(Score, Bonus, Bullets)
 
         target_group.draw(screen)
         crosshair_group.draw(screen)
@@ -95,12 +100,22 @@ def Game(Background_Path, Target_Path, Crosshair_path, curtain_path):
         time_text = font.render(f":{(3000 - time) / 100} ", True, (255, 255, 255))
         score_text = font.render(f"{Score}", True, (0, 0, 0))
         bonus_text = font.render(f"{Bonus}", True, (0, 0, 0))
+
+        for num in range(Bullets):
+            screen.blit(BulletImg,(Bullet_x + (num*25),Bullet_y))
         current_time = pygame.time.get_ticks()
         if current_time - static_time > 1:
             time += 1
             static_time += 1
 
         if 1500 - time <= 0:
+            if Score > High_Score:
+                file = open('High_Score.txt', 'w')
+                file.write(str(Score))
+                file.close()
+            break
+
+        if Bullets == 0:
             if Score > High_Score:
                 file = open('High_Score.txt', 'w')
                 file.write(str(Score))
@@ -149,6 +164,7 @@ crosshair = Menu_Crosshair(Crosshair_Path)
 menu_crosshair_group = pygame.sprite.Group()
 menu_crosshair_group.add(crosshair)
 gunshot = pygame.mixer.Sound('PNG/HUD/Gunshot.mp3')
+num_of_bullets = 4
 while Main_menu:
 
     menu_screen.fill((0, 0, 0))
@@ -172,11 +188,11 @@ while Main_menu:
             if event.type == pygame.K_c:
                 Currency = Customize()
             if event.key == pygame.K_p:
-                currency += Game(Background_Path, Target_Path, Crosshair_Path, Curtain_Path)
+                currency += Game(Background_Path, Target_Path, Crosshair_Path, Curtain_Path,num_of_bullets)
         if event.type == pygame.MOUSEBUTTONDOWN:
             gunshot.play()
             mouse_x, mouse_y = pygame.mouse.get_pos()
             if (mouse_x >= 480 and mouse_x <= 780) and (mouse_y >= 290 and mouse_y <= 365):
-                currency += Game(Background_Path, Target_Path, Crosshair_Path, Curtain_Path)
+                currency += Game(Background_Path, Target_Path, Crosshair_Path, Curtain_Path,num_of_bullets)
     pygame.display.flip()
     clock.tick(60)
