@@ -1,7 +1,7 @@
 # A Simple Shooting Game.
 It is made by using pygame. You have to hit a target and a Score is Achieved.
 Features Available:-
-  1.Shooting Targets Randomly.\n
+  1.Shooting Targets Randomly.
   2.Gunshot Music.
   3.Increasing Score And Bonus after each Hit.
   4.Storing Currency and High Score.
