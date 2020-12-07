@@ -148,6 +148,7 @@ class Menu_Crosshair(pygame.sprite.Sprite):
 crosshair = Menu_Crosshair(Crosshair_Path)
 menu_crosshair_group = pygame.sprite.Group()
 menu_crosshair_group.add(crosshair)
+gunshot = pygame.mixer.Sound('PNG/HUD/Gunshot.mp3')
 while Main_menu:
 
     menu_screen.fill((0, 0, 0))
@@ -173,7 +174,7 @@ while Main_menu:
             if event.key == pygame.K_p:
                 currency += Game(Background_Path, Target_Path, Crosshair_Path, Curtain_Path)
         if event.type == pygame.MOUSEBUTTONDOWN:
-            menu_crosshair_group.shoot()
+            gunshot.play()
             mouse_x, mouse_y = pygame.mouse.get_pos()
             if (mouse_x >= 480 and mouse_x <= 780) and (mouse_y >= 290 and mouse_y <= 365):
                 currency += Game(Background_Path, Target_Path, Crosshair_Path, Curtain_Path)
