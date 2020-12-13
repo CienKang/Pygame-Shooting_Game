@@ -5,7 +5,7 @@ Features Available:-
   2.Gunshot Music.
   3.Increasing Score And Bonus after each Hit.
   4.Storing Currency and High Score.
-  5.Main Menu with only clickable element right now being Play Button.
+  5.Main Menu with only clickable element right now being Play Button and Instructions.
 
 Features To Be Added :-
 1.Making Every Button on Main Menu Clickable.
